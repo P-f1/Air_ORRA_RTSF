@@ -8,8 +8,6 @@ export ServiceVersion=0.1.0
 
 export Arch="$(cut -d'/' -f2 <<<"$Platform")"
 
-export Artifacts=/home/steven/loss-detection-app
-
 export HZN_EXCHANGE_URL=$TargetServer
 export HZN_ORG_ID="$(cut -d'@' -f2 <<<"$Username")"
 export HZN_EXCHANGE_USER_AUTH="$(cut -d'@' -f1 <<<"$Username")"
