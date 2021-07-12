@@ -5,9 +5,13 @@ import os
 import sys
 import json
 import importlib
-
+import pathlib
 print ('Number of arguments:', len(sys.argv), 'arguments.')
 print ('Argument List:', str(sys.argv))
+
+currentFolder = pathlib.Path().resolve()
+print('=============>{0}'.format(currentFolder))
+sys.path.append('{0}/common'.format(currentFolder))
 
 module = importlib.import_module(sys.argv[1])
 transform = module.Transform()

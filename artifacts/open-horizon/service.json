@@ -12,11 +12,7 @@
             "air-app-service-zmq-to-mqtt": {
                 "image": "tibcosoftware/labs-air-edgex-app-service-zmq-to-mqtt:latest",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "48540:48540"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "REGISTRY_HOST=$EDGEX_CORE_CONSUL",
                     "CLIENTS_COREDATA_HOST=$EDGEX_CORE_DATA_HOST",
@@ -52,16 +48,13 @@
                     "consul-config:/consul/config",
                     "consul-data:/consul/data"
                 ],
+                "entrypoint": [],
                 "devices": []
             },
             "air-app-service-metadata": {
                 "image": "tibcosoftware/labs-air-edgex-app-service-metadata:latest",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "48530:48530"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "REGISTRY_HOST=$EDGEX_CORE_CONSUL",
                     "CLIENTS_COREDATA_HOST=$EDGEX_CORE_DATA_HOST",
@@ -109,265 +102,253 @@
                     "consul-config:/consul/config",
                     "consul-data:/consul/data"
                 ],
+                "entrypoint": [],
                 "devices": []
             },
             "edgex-core-consul": {
                 "image": "edgexfoundry/docker-edgex-consul:1.2.0",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "8400:8400",
-                        "HostIP": "127.0.0.1"
-                    },
-                    {
-                        "HostPort": "8500:8500"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_DB=redis",
-                    "EDGEX_SECURE=False"
+                    "EDGEX_SECURE=False",
+                    "CONSUL_CLIENT_INTERFACE=enp0s3",
+                    "CONSUL_BIND_INTERFACE=enp0s3"
                 ],
                 "binds": [
                     "consul-config:/consul/config:z",
                     "consul-data:/consul/data:z"
                 ],
+                "entrypoint": [],
                 "devices": []
             },
             "edgex-redis": {
                 "image": "redis:5.0.8-alpine",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "6379:6379",
-                        "HostIP": "127.0.0.1"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_SECURITY_SECRET_STORE=false",
-                    "Registry_Host=edgex-core-consul",
-                    "Clients_CoreData_Host=edgex-core-data",
-                    "Clients_Data_Host=edgex-core-data",
-                    "Clients_Notifications_Host=edgex-support-notifications",
-                    "Clients_Metadata_Host=edgex-core-metadata",
-                    "Clients_Command_Host=edgex-core-command",
-                    "Clients_Scheduler_Host=edgex-support-scheduler",
-                    "Clients_RulesEngine_Host=edgex-kuiper",
-                    "Clients_VirtualDevice_Host=edgex-device-virtual",
-                    "Databases_Primary_Host=edgex-redis",
+                    "Registry_Host=localhost",
+                    "Clients_CoreData_Host=localhost",
+                    "Clients_Data_Host=localhost",
+                    "Clients_Notifications_Host=localhost",
+                    "Clients_Metadata_Host=localhost",
+                    "Clients_Command_Host=localhost",
+                    "Clients_Scheduler_Host=localhost",
+                    "Clients_RulesEngine_Host=localhost",
+                    "Clients_VirtualDevice_Host=localhost",
+                    "Databases_Primary_Host=localhost",
                     "Logging_EnableRemote=false"
                 ],
                 "binds": [
                     "db-data:/data:z"
                 ],
+                "entrypoint": [],
                 "devices": []
             },
             "edgex-support-notifications": {
                 "image": "edgexfoundry/docker-support-notifications-go:1.2.1",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "48060:48060",
-                        "HostIP": "127.0.0.1"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_SECURITY_SECRET_STORE=false",
-                    "Registry_Host=edgex-core-consul",
-                    "Clients_CoreData_Host=edgex-core-data",
-                    "Clients_Data_Host=edgex-core-data",
-                    "Clients_Notifications_Host=edgex-support-notifications",
-                    "Clients_Metadata_Host=edgex-core-metadata",
-                    "Clients_Command_Host=edgex-core-command",
-                    "Clients_Scheduler_Host=edgex-support-scheduler",
-                    "Clients_RulesEngine_Host=edgex-kuiper",
-                    "Clients_VirtualDevice_Host=edgex-device-virtual",
-                    "Databases_Primary_Host=edgex-redis",
+                    "Registry_Host=localhost",
+                    "Clients_CoreData_Host=localhost",
+                    "Clients_Data_Host=localhost",
+                    "Clients_Notifications_Host=localhost",
+                    "Clients_Metadata_Host=localhost",
+                    "Clients_Command_Host=localhost",
+                    "Clients_Scheduler_Host=localhost",
+                    "Clients_RulesEngine_Host=localhost",
+                    "Clients_VirtualDevice_Host=localhost",
+                    "Databases_Primary_Host=localhost",
                     "Logging_EnableRemote=false",
-                    "Service_Host=edgex-support-notifications"
+                    "Service_Host=localhost"
                 ],
                 "binds": [],
+                "entrypoint": [
+                    "/support-notifications",
+                    "-cp=consul.http://localhost:8500",
+                    "--confdir=/res",
+                    "--registry"
+                ],
                 "devices": []
             },
             "edgex-core-metadata": {
                 "image": "edgexfoundry/docker-core-metadata-go:1.2.1",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "48081:48081",
-                        "HostIP": "127.0.0.1"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_SECURITY_SECRET_STORE=false",
-                    "Registry_Host=edgex-core-consul",
-                    "Clients_CoreData_Host=edgex-core-data",
-                    "Clients_Data_Host=edgex-core-data",
-                    "Clients_Notifications_Host=edgex-support-notifications",
-                    "Clients_Metadata_Host=edgex-core-metadata",
-                    "Clients_Command_Host=edgex-core-command",
-                    "Clients_Scheduler_Host=edgex-support-scheduler",
-                    "Clients_RulesEngine_Host=edgex-kuiper",
-                    "Clients_VirtualDevice_Host=edgex-device-virtual",
-                    "Databases_Primary_Host=edgex-redis",
+                    "Registry_Host=localhost",
+                    "Clients_CoreData_Host=localhost",
+                    "Clients_Data_Host=localhost",
+                    "Clients_Notifications_Host=localhost",
+                    "Clients_Metadata_Host=localhost",
+                    "Clients_Command_Host=localhost",
+                    "Clients_Scheduler_Host=localhost",
+                    "Clients_RulesEngine_Host=localhost",
+                    "Clients_VirtualDevice_Host=localhost",
+                    "Databases_Primary_Host=localhost",
                     "Logging_EnableRemote=false",
-                    "Service_Host=edgex-core-metadata",
+                    "Service_Host=localhost",
                     "Service_Timeout=20000",
-                    "Notifications_Sender=edgex-core-metadata"
+                    "Notifications_Sender=localhost"
                 ],
                 "binds": [],
+                "entrypoint": [
+                    "/core-metadata",
+                    "-cp=consul.http://localhost:8500",
+                    "--confdir=/res",
+                    "--registry"
+                ],
                 "devices": []
             },
             "edgex-core-data": {
                 "image": "edgexfoundry/docker-core-data-go:1.2.1",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "48080:48080",
-                        "HostIP": "127.0.0.1"
-                    },
-                    {
-                        "HostPort": "5563:5563",
-                        "HostIP": "127.0.0.1"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_SECURITY_SECRET_STORE=false",
-                    "Registry_Host=edgex-core-consul",
-                    "Clients_CoreData_Host=edgex-core-data",
-                    "Clients_Data_Host=edgex-core-data",
-                    "Clients_Notifications_Host=edgex-support-notifications",
-                    "Clients_Metadata_Host=edgex-core-metadata",
-                    "Clients_Command_Host=edgex-core-command",
-                    "Clients_Scheduler_Host=edgex-support-scheduler",
-                    "Clients_RulesEngine_Host=edgex-kuiper",
-                    "Clients_VirtualDevice_Host=edgex-device-virtual",
-                    "Databases_Primary_Host=edgex-redis",
+                    "Registry_Host=localhost",
+                    "Clients_CoreData_Host=localhost",
+                    "Clients_Data_Host=localhost",
+                    "Clients_Notifications_Host=localhost",
+                    "Clients_Metadata_Host=localhost",
+                    "Clients_Command_Host=localhost",
+                    "Clients_Scheduler_Host=localhost",
+                    "Clients_RulesEngine_Host=localhost",
+                    "Clients_VirtualDevice_Host=localhost",
+                    "Databases_Primary_Host=localhost",
                     "Logging_EnableRemote=false",
-                    "Service_Host=edgex-core-data"
+                    "Service_Host=localhost"
                 ],
                 "binds": [],
+                "entrypoint": [
+                    "/core-data",
+                    "-cp=consul.http://localhost:8500",
+                    "--confdir=/res",
+                    "--registry"
+                ],
                 "devices": []
             },
             "edgex-core-command": {
                 "image": "edgexfoundry/docker-core-command-go:1.2.1",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "48082:48082",
-                        "HostIP": "127.0.0.1"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_SECURITY_SECRET_STORE=false",
-                    "Registry_Host=edgex-core-consul",
-                    "Clients_CoreData_Host=edgex-core-data",
-                    "Clients_Data_Host=edgex-core-data",
-                    "Clients_Notifications_Host=edgex-support-notifications",
-                    "Clients_Metadata_Host=edgex-core-metadata",
-                    "Clients_Command_Host=edgex-core-command",
-                    "Clients_Scheduler_Host=edgex-support-scheduler",
-                    "Clients_RulesEngine_Host=edgex-kuiper",
-                    "Clients_VirtualDevice_Host=edgex-device-virtual",
-                    "Databases_Primary_Host=edgex-redis",
+                    "Registry_Host=localhost",
+                    "Clients_CoreData_Host=localhost",
+                    "Clients_Data_Host=localhost",
+                    "Clients_Notifications_Host=localhost",
+                    "Clients_Metadata_Host=localhost",
+                    "Clients_Command_Host=localhost",
+                    "Clients_Scheduler_Host=localhost",
+                    "Clients_RulesEngine_Host=localhost",
+                    "Clients_VirtualDevice_Host=localhost",
+                    "Databases_Primary_Host=localhost",
                     "Logging_EnableRemote=false",
-                    "Service_Host=edgex-core-command"
+                    "Service_Host=localhost"
                 ],
                 "binds": [],
+                "entrypoint": [
+                    "/core-command",
+                    "-cp=consul.http://localhost:8500",
+                    "--confdir=/res",
+                    "--registry"
+                ],
                 "devices": []
             },
             "edgex-support-scheduler": {
                 "image": "edgexfoundry/docker-support-scheduler-go:1.2.1",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "48085:48085",
-                        "HostIP": "127.0.0.1"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_SECURITY_SECRET_STORE=false",
-                    "Registry_Host=edgex-core-consul",
-                    "Clients_CoreData_Host=edgex-core-data",
-                    "Clients_Data_Host=edgex-core-data",
-                    "Clients_Notifications_Host=edgex-support-notifications",
-                    "Clients_Metadata_Host=edgex-core-metadata",
-                    "Clients_Command_Host=edgex-core-command",
-                    "Clients_Scheduler_Host=edgex-support-scheduler",
-                    "Clients_RulesEngine_Host=edgex-kuiper",
-                    "Clients_VirtualDevice_Host=edgex-device-virtual",
-                    "Databases_Primary_Host=edgex-redis",
+                    "Registry_Host=localhost",
+                    "Clients_CoreData_Host=localhost",
+                    "Clients_Data_Host=localhost",
+                    "Clients_Notifications_Host=localhost",
+                    "Clients_Metadata_Host=localhost",
+                    "Clients_Command_Host=localhost",
+                    "Clients_Scheduler_Host=localhost",
+                    "Clients_RulesEngine_Host=localhost",
+                    "Clients_VirtualDevice_Host=localhost",
+                    "Databases_Primary_Host=localhost",
                     "Logging_EnableRemote=false",
-                    "Service_Host=edgex-support-scheduler",
-                    "IntervalActions_ScrubPushed_Host=edgex-core-data",
-                    "IntervalActions_ScrubAged_Host=edgex-core-data"
+                    "Service_Host=localhost",
+                    "IntervalActions_ScrubPushed_Host=localhost",
+                    "IntervalActions_ScrubAged_Host=localhost"
                 ],
                 "binds": [],
+                "entrypoint": [
+                    "/support-scheduler",
+                    "-cp=consul.http://localhost:8500",
+                    "--confdir=/res",
+                    "--registry"
+                ],
                 "devices": []
             },
             "mqtt": {
                 "image": "eclipse-mosquitto:1.5.8",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "1883:1883"
-                    }
-                ],
+                "network": "host",
                 "environment": [],
                 "binds": [],
+                "entrypoint": [],
                 "devices": []
             },
             "edgex-device-rest": {
                 "image": "edgexfoundry/docker-device-rest-go:1.1.1",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "49986:49986"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_SECURITY_SECRET_STORE=false",
-                    "Registry_Host=edgex-core-consul",
-                    "Clients_CoreData_Host=edgex-core-data",
-                    "Clients_Data_Host=edgex-core-data",
-                    "Clients_Notifications_Host=edgex-support-notifications",
-                    "Clients_Metadata_Host=edgex-core-metadata",
-                    "Clients_Command_Host=edgex-core-command",
-                    "Clients_Scheduler_Host=edgex-support-scheduler",
-                    "Clients_RulesEngine_Host=edgex-kuiper",
-                    "Clients_VirtualDevice_Host=edgex-device-virtual",
-                    "Databases_Primary_Host=edgex-redis",
+                    "Registry_Host=localhost",
+                    "Clients_CoreData_Host=localhost",
+                    "Clients_Data_Host=localhost",
+                    "Clients_Notifications_Host=localhost",
+                    "Clients_Metadata_Host=localhost",
+                    "Clients_Command_Host=localhost",
+                    "Clients_Scheduler_Host=localhost",
+                    "Clients_RulesEngine_Host=localhost",
+                    "Clients_VirtualDevice_Host=localhost",
+                    "Databases_Primary_Host=localhost",
                     "Logging_EnableRemote=false",
-                    "Service_Host=edgex-device-rest"
+                    "Service_Host=localhost"
                 ],
                 "binds": [
                     "${Artifacts}/res/device-rest-go/:/res/"
+                ],
+                "entrypoint": [
+                    "/device-rest-go",
+                    "-cp=consul.http://localhost:8500",
+                    "--confdir=/res",
+                    "--registry"
                 ],
                 "devices": []
             },
             "edgex-device-mqtt": {
                 "image": "edgexfoundry/docker-device-mqtt-go:1.2.1",
                 "privileged": true,
-                "ports": [
-                    {
-                        "HostPort": "49982:49982"
-                    }
-                ],
+                "network": "host",
                 "environment": [
                     "EDGEX_SECURITY_SECRET_STORE=false",
-                    "Registry_Host=edgex-core-consul",
-                    "Clients_CoreData_Host=edgex-core-data",
-                    "Clients_Data_Host=edgex-core-data",
-                    "Clients_Notifications_Host=edgex-support-notifications",
-                    "Clients_Metadata_Host=edgex-core-metadata",
-                    "Clients_Command_Host=edgex-core-command",
-                    "Clients_Scheduler_Host=edgex-support-scheduler",
-                    "Clients_RulesEngine_Host=edgex-kuiper",
-                    "Clients_VirtualDevice_Host=edgex-device-virtual",
-                    "Databases_Primary_Host=edgex-redis",
+                    "Registry_Host=localhost",
+                    "Clients_CoreData_Host=localhost",
+                    "Clients_Data_Host=localhost",
+                    "Clients_Notifications_Host=localhost",
+                    "Clients_Metadata_Host=localhost",
+                    "Clients_Command_Host=localhost",
+                    "Clients_Scheduler_Host=localhost",
+                    "Clients_RulesEngine_Host=localhost",
+                    "Clients_VirtualDevice_Host=localhost",
+                    "Databases_Primary_Host=localhost",
                     "Logging_EnableRemote=false",
-                    "Service_Host=edgex-device-mqtt",
-                    "Driver_IncomingHost=mqtt",
-                    "Driver_ResponseHost=mqtt",
+                    "Service_Host=localhost",
+                    "Driver_IncomingHost=localhost",
+                    "Driver_ResponseHost=localhost",
                     "Driver_IncomingTopic=edgex/#",
                     "Driver_IncomingClientId=edgex-mqtt-sub",
                     "Driver_ResponseClientId=edgex-mqtt-command-sub",
@@ -375,6 +356,12 @@
                 ],
                 "binds": [
                     "${Artifacts}/res/device-mqtt-go/:/res/"
+                ],
+                "entrypoint": [
+                    "/device-mqtt",
+                    "--profile=docker",
+                    "--confdir=/res",
+                    "--registry=consul://localhost:8500"
                 ],
                 "devices": []
             }

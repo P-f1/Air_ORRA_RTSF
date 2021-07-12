@@ -3,6 +3,7 @@
 import json
 import yaml
 import os
+import keyword_replace
 
 class Transform:
     def __init__(self):
@@ -67,8 +68,9 @@ class Transform:
         serviceObj = {}
         serviceObj['image'] = service['image']
         serviceObj['privileged'] = True
-        
-        if 'ports' in service.keys():
+        serviceObj['network'] = 'host'
+
+        if ('ports' in service.keys()) and (serviceObj['network'] != 'host'):
             # ports:
             #  - "3000"
             #  - "3000-3005"
@@ -92,8 +94,7 @@ class Transform:
                     serviceObj['ports'].append({ 
                         'HostPort': port 
                     })
-                    
-                
+
         serviceObj['environment'] = []
         if 'environment' in service.keys():
             if type(service['environment']) == dict:
@@ -103,15 +104,19 @@ class Transform:
                 for envStr in service['environment']:
                     env=envStr.split('=')
                     serviceObj['environment'].append("{0}={1}".format(env[0], self.normalize(env[1])))
-                
+
         serviceObj['binds'] = []
         if 'volumes' in service.keys():
             serviceObj['binds']=service['volumes']
 
+        serviceObj['entrypoint'] = []
+        if 'entrypoint' in service.keys():
+            serviceObj['entrypoint']=service['entrypoint']
+
         serviceObj['devices'] = []
         if 'devices' in service.keys():
             serviceObj['devices']=service['devices']
-        
+
         return {
             "name" : service['container_name'],
             "service" : serviceObj
@@ -124,6 +129,8 @@ class Transform:
         print('**********************************')
         constraints = json.loads(constraintStr)
         self.policy['constraints'] = constraints
+#        keywordMapper = keyword_replace.KeywordMapper('', '${', '}')
+#        serviceText = keywordMapper.replace(json.dumps(self.service, indent = 4), keyword_replace.KeywordReplaceHandler(os.environ))
         return {
             'service.json' : json.dumps(self.service, indent = 4),
             'service.policy.json' : json.dumps(self.servicePolicy, indent = 4),

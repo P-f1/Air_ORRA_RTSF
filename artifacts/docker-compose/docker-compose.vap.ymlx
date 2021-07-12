@@ -26,23 +26,23 @@ services:
     depends_on:
       - video-analytic
 
-#  video-analytic:
-#    image: video-analytics-serving-gstreamer:latest
-#    ports:
-#      - "8090:8080"
-#    container_name: video-analytic
-#    hostname: video-analytic
-#    privileged: true
-#    networks:
-#      - loss-detection-app_edgex-network
-#    environment:
-#      DISPLAY: ${DISPLAY}
-#    devices:
+  video-analytic:
+    image: video-analytics-serving-gstreamer:latest
+    ports:
+      - "8090:8080"
+    container_name: video-analytic
+    hostname: video-analytic
+    privileged: true
+    networks:
+      - loss-detection-app_edgex-network
+    environment:
+      DISPLAY: ${DISPLAY}
+    devices:
 #      - /dev/video0:/dev/video0
-#      - /dev/dri:/dev/dri
-#    volumes:
-#      - /tmp/.X11-unix:/tmp/.X11-unix
-#      - ${Artifacts}/pipelines:/home/video-analytics-serving/pipelines
-#      - ${Artifacts}/models:/home/video-analytics-serving/models
-#      - ${Artifacts}/video-samples:/home/video-analytics-serving/video-samples
-#      - ${Demo}:/home/demo
+      - /dev/dri:/dev/dri
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${Artifacts}/pipelines:/home/video-analytics-serving/pipelines
+      - ${Artifacts}/models:/home/video-analytics-serving/models
+      - ${Artifacts}/video-samples:/home/video-analytics-serving/video-samples
+      - ${Demo}:/home/demo
