@@ -103,31 +103,31 @@ services:
       - consul-config:/consul/config
       - consul-data:/consul/data
   
-#  device-siemens-simulator:
-#    image: tibcosoftware/labs-air-edgex-device-siemens-simulator:latest
-#    ports:
-#      - "48995:48995"
-#    container_name: labsair-device-siemens-simulator
-#    hostname: labsair-device-siemens-simulator
-#    networks:
-#      - edgex-network
-#    environment:
-#      REGISTRY_HOST: ${EDGEX_CORE_CONSUL}
-#      CLIENTS_COREDATA_HOST: ${EDGEX_CORE_DATA_HOST}
-#      CLIENTS_DATA_HOST: ${EDGEX_CORE_DATA_HOST}
-#      CLIENTS_NOTIFICATIONS_HOST: ${EDGEX_SUPPORT_NOTIFICATIONS}
-#      CLIENTS_METADATA_HOST: ${EDGEX_CORE_METADATA}
-#      CLIENTS_COMMAND_HOST: ${EDGEX_CORE_COMMAND}
-#      CLIENTS_SCHEDULER_HOST: ${EDGEX_SUPPORT_SCHDELER}
-#      DATABASES_PRIMARY_HOST: ${EDGEX_REDIS}
-#      EDGEX_SECURITY_SECRET_STORE: "false"
-#      SERVICE_HOST: ${LABAIR_DEVICE_SIEMENS_SIMULATOR}
-#      SERVICE_PORT: 48995
-#    volumes:
-#      - db-data:/data/db
-#      - log-data:/edgex/logs
-#      - consul-config:/consul/config
-#      - consul-data:/consul/data
+  device-siemens-simulator:
+    image: tibcosoftware/labs-air-edgex-device-siemens-simulator:latest
+    ports:
+      - "48995:48995"
+    container_name: labsair-device-siemens-simulator
+    hostname: labsair-device-siemens-simulator
+    networks:
+      - edgex-network
+    environment:
+      REGISTRY_HOST: ${EDGEX_CORE_CONSUL}
+      CLIENTS_COREDATA_HOST: ${EDGEX_CORE_DATA_HOST}
+      CLIENTS_DATA_HOST: ${EDGEX_CORE_DATA_HOST}
+      CLIENTS_NOTIFICATIONS_HOST: ${EDGEX_SUPPORT_NOTIFICATIONS}
+      CLIENTS_METADATA_HOST: ${EDGEX_CORE_METADATA}
+      CLIENTS_COMMAND_HOST: ${EDGEX_CORE_COMMAND}
+      CLIENTS_SCHEDULER_HOST: ${EDGEX_SUPPORT_SCHDELER}
+      DATABASES_PRIMARY_HOST: ${EDGEX_REDIS}
+      EDGEX_SECURITY_SECRET_STORE: "false"
+      SERVICE_HOST: ${LABAIR_DEVICE_SIEMENS_SIMULATOR}
+      SERVICE_PORT: 48995
+    volumes:
+      - db-data:/data/db
+      - log-data:/edgex/logs
+      - consul-config:/consul/config
+      - consul-data:/consul/data
 
 
 version: '3.7'
