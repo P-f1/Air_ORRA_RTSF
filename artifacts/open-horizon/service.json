@@ -359,9 +359,9 @@
                 ],
                 "entrypoint": [
                     "/device-mqtt",
-                    "--profile=docker",
+                    "-cp=consul.http://localhost:8500",
                     "--confdir=/res",
-                    "--registry=consul://localhost:8500"
+                    "--registry"
                 ],
                 "devices": []
             }

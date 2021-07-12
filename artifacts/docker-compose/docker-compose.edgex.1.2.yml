@@ -219,28 +219,28 @@ services:
 # Device Services
 #################################################################
 
-  device-rest:
-    image: edgexfoundry/docker-device-rest-go:1.1.1
-    ports:
-      - "49986:49986"
-    container_name: edgex-device-rest
-    hostname: edgex-device-rest
-    volumes:
-      - ${Artifacts}/res/device-rest-go/:/res/
-    networks:
-      - edgex-network
-    environment:
-      <<: *common-variables
-#      Service_Host: edgex-device-rest
-      Service_Host: localhost
-    entrypoint:
-      - /device-rest-go
-      - -cp=consul.http://localhost:8500
-      - --confdir=/res
-      - --registry
-    depends_on:
-      - data
-      - command
+#  device-rest:
+#    image: edgexfoundry/docker-device-rest-go:1.1.1
+#    ports:
+#      - "49986:49986"
+#    container_name: edgex-device-rest
+#    hostname: edgex-device-rest
+#    volumes:
+#      - ${Artifacts}/res/device-rest-go/:/res/
+#    networks:
+#      - edgex-network
+#    environment:
+#      <<: *common-variables
+##      Service_Host: edgex-device-rest
+#      Service_Host: localhost
+#    entrypoint:
+#      - /device-rest-go
+#      - -cp=consul.http://localhost:8500
+#      - --confdir=/res
+#      - --registry
+#    depends_on:
+#      - data
+#      - command
 
 #  device-mqtt:
 #    image: edgexfoundry/docker-device-mqtt-go:1.2.1
@@ -266,9 +266,9 @@ services:
 #      Driver_ResponseTopic: Edgex-command-response
 #    entrypoint:
 #      - /device-mqtt
-#      - --profile=docker
+#      - -cp=consul.http://localhost:8500
 #      - --confdir=/res
-#      - --registry=consul://localhost:8500
+#      - --registry
 #    depends_on:
 #      - data
 #      - command
