@@ -72,7 +72,7 @@ services:
       - consul-config:/consul/config:z
       - consul-data:/consul/data:z
     environment: 
-      EDGEX_DB: redis
+      EDGEX_DB: localhost
       EDGEX_SECURE: false
       CONSUL_CLIENT_INTERFACE: enp0s3
       CONSUL_BIND_INTERFACE: enp0s3 
