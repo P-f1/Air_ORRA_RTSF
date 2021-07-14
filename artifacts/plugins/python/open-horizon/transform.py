@@ -129,10 +129,11 @@ class Transform:
         print('**********************************')
         constraints = json.loads(constraintStr)
         self.policy['constraints'] = constraints
-#        keywordMapper = keyword_replace.KeywordMapper('', '${', '}')
-#        serviceText = keywordMapper.replace(json.dumps(self.service, indent = 4), keyword_replace.KeywordReplaceHandler(os.environ))
+        keywordMapper = keyword_replace.KeywordMapper('', '${', '}')
+        serviceText = keywordMapper.replace(json.dumps(self.service, indent = 4), keyword_replace.KeywordReplaceHandler(os.environ))
+#        serviceText = json.dumps(self.service, indent = 4)
         return {
-            'service.json' : json.dumps(self.service, indent = 4),
+            'service.json' : serviceText,
             'service.policy.json' : json.dumps(self.servicePolicy, indent = 4),
             'deployment.policy.json' : json.dumps(self.policy, indent = 4)
         }
