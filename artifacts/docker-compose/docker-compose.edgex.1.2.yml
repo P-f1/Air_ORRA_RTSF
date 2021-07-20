@@ -74,8 +74,8 @@ services:
     environment: 
       EDGEX_DB: localhost
       EDGEX_SECURE: false
-      CONSUL_CLIENT_INTERFACE: enp0s3
-      CONSUL_BIND_INTERFACE: enp0s3 
+#      CONSUL_CLIENT_INTERFACE: enp0s3
+#      CONSUL_BIND_INTERFACE: enp0s3 
 
   redis:
     image: redis:5.0.8-alpine
@@ -213,65 +213,74 @@ services:
     container_name: mqtt
     hostname: mqtt
     networks:
-      - edgex-network  
+      - edgex-networks
+      
+#  web:
+#    image: test_web:latest
+#    ports:
+#      - "5000:5000"
+#    container_name: web
+#    hostname: web
+#    networks:
+#      - edgex-networks
 
 #################################################################
 # Device Services
 #################################################################
 
-#  device-rest:
-#    image: edgexfoundry/docker-device-rest-go:1.1.1
-#    ports:
-#      - "49986:49986"
-#    container_name: edgex-device-rest
-#    hostname: edgex-device-rest
-#    volumes:
-#      - ${Artifacts}/res/device-rest-go/:/res/
-#    networks:
-#      - edgex-network
-#    environment:
-#      <<: *common-variables
-##      Service_Host: edgex-device-rest
-#      Service_Host: localhost
-#    entrypoint:
-#      - /device-rest-go
-#      - -cp=consul.http://localhost:8500
-#      - --confdir=/res
-#      - --registry
-#    depends_on:
-#      - data
-#      - command
+  device-rest:
+    image: edgexfoundry/docker-device-rest-go:1.1.1
+    ports:
+      - "49986:49986"
+    container_name: edgex-device-rest
+    hostname: edgex-device-rest
+    volumes:
+      - ${Artifacts}/res/device-rest-go/:/res/
+    networks:
+      - edgex-network
+    environment:
+      <<: *common-variables
+#      Service_Host: edgex-device-rest
+      Service_Host: localhost
+    entrypoint:
+      - /device-rest-go
+      - -cp=consul.http://localhost:8500
+      - --confdir=/res
+      - --registry
+    depends_on:
+      - data
+      - command
 
-#  device-mqtt:
-#    image: edgexfoundry/docker-device-mqtt-go:1.2.1
-#    ports:
-#      - "49982:49982"
-#    container_name: edgex-device-mqtt
-#    hostname: edgex-device-mqtt
-#    volumes:
-#      - ${Artifacts}/res/device-mqtt-go/:/res/
-#    networks:
-#      - edgex-network
-#    environment:
-#      <<: *common-variables
-##      Service_Host: edgex-device-mqtt
-#      Service_Host: localhost
-##      Driver_IncomingHost: mqtt
-#      Driver_IncomingHost: localhost
-##      Driver_ResponseHost: mqtt
-#      Driver_ResponseHost: localhost
-#      Driver_IncomingTopic: edgex/#
-#      Driver_IncomingClientId: edgex-mqtt-sub
-#      Driver_ResponseClientId: edgex-mqtt-command-sub
-#      Driver_ResponseTopic: Edgex-command-response
-#    entrypoint:
-#      - /device-mqtt
-#      - -cp=consul.http://localhost:8500
-#      - --confdir=/res
-#      - --registry
-#    depends_on:
-#      - data
-#      - command
+  device-mqtt:
+    image: edgexfoundry/docker-device-mqtt-go:1.2.1
+    ports:
+      - "49982:49982"
+    container_name: edgex-device-mqtt
+    hostname: edgex-device-mqtt
+    volumes:
+      - ${Artifacts}/res/device-mqtt-go/:/res/
+    networks:
+      - edgex-network
+    environment:
+      <<: *common-variables
+#      Service_Host: edgex-device-mqtt
+      Service_Host: localhost
+#      Driver_IncomingHost: mqtt
+      Driver_IncomingHost: localhost
+#      Driver_ResponseHost: mqtt
+      Driver_ResponseHost: localhost
+      Driver_IncomingTopic: edgex/#
+      Driver_IncomingClientId: edgex-mqtt-sub
+      Driver_ResponseClientId: edgex-mqtt-command-sub
+      Driver_ResponseTopic: Edgex-command-response
+    entrypoint:
+      - /device-mqtt
+      - -cp=consul.http://localhost:8500
+      - --confdir=/res
+      - --registry
+    depends_on:
+      - data
+      - command
 
 networks:
   edgex-network:
