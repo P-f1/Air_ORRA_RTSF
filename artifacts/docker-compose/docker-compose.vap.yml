@@ -6,8 +6,8 @@ networks:
 
 services:
   cv-region-of-interest:
-#   image: cv-region-of-interest:dev
-    container_name: bigoyang/cv-region-of-interest
+    image: bigoyang/cv-region-of-interest:dev
+    container_name: cv-region-of-interest
     hostname: cv-region-of-interest
     environment:
       - MQTT_DESTINATION_HOST=localhost:1883
