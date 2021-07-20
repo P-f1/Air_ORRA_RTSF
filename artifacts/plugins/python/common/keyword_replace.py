@@ -24,7 +24,7 @@ class KeywordMapper:
             template = self.template
             if '' == template :
                 return ''
-        print('[KeywordMapper.replace] template = {0}'.format(template))
+#        print('[KeywordMapper.replace] template = {0}'.format(template))
         self.document = ''
         self.keyword = ''
         scope = False
@@ -33,7 +33,7 @@ class KeywordMapper:
         svalue = ''
         handler.startToMap()
         for i in range(0, len(template)):
-            print('template[{0}] = {1}'.format(i, template[i]))
+#            print('template[{0}] = {1}'.format(i, template[i]))
             # maybe find a keyword beginning Tag - now isn't in a keyword
             if True != scope and template[i] == self.slefttag[0] :
                 if self.isATag(i, self.slefttag, template) :
@@ -47,7 +47,7 @@ class KeywordMapper:
                     svalue = handler.replace(skeyword)
                     if '' == svalue :
                         svalue = '{0}{1}{2}'.format(self.slefttag, skeyword, self.srighttag)
-                    print('value ->{0}'.format(svalue))
+#                    print('value ->{0}'.format(svalue))
                     self.document += svalue
                     boundary = True
                     scope = False
@@ -60,7 +60,7 @@ class KeywordMapper:
             else :
                 boundary = False
 
-            print('scope = ', scope, ', boundary = ', boundary, ', self.keyword = ', self.keyword)#, ', document = ', self.document)
+#            print('scope = ', scope, ', boundary = ', boundary, ', self.keyword = ', self.keyword)#, ', document = ', self.document)
             if i == len(template)-1 :
                 if True == scope :
                     self.document += self.keyword
@@ -83,7 +83,7 @@ class KeywordReplaceHandler:
 	    self.result = ''
 
     def replace(self, keyword):
-        print('Got keyword =========>{0}'.format(keyword))
+#        print('Got keyword =========>{0}'.format(keyword))
         if self.keywordMap[keyword] is not None:
             return self.keywordMap[keyword]
         return ''
