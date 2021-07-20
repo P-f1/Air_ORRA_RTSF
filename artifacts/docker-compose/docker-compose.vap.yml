@@ -27,7 +27,7 @@ services:
 #      - video-analytic
 
   video-analytic:
-    image: video-analytics-serving-gstreamer:latest
+    image: bigoyang/video-analytics-serving-gstreamer:latest
     ports:
       - "8090:8080"
     container_name: video-analytic
