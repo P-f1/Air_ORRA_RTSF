@@ -47,5 +47,4 @@ services:
       - ${Artifacts}/pipelines:/home/video-analytics-serving/pipelines
       - ${Artifacts}/models:/home/video-analytics-serving/models
       - ${Artifacts}/video-samples:/home/video-analytics-serving/video-samples
-#      - ${Vas}/vaserving:/home/video-analytics-serving/vaserving
       - ${Demo}:/home/demo
