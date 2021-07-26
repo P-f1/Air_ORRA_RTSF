@@ -2,6 +2,7 @@
 
 import glob
 import os
+import shutil
 import sys
 import json
 import importlib
@@ -15,16 +16,46 @@ sys.path.append('{0}/common'.format(currentFolder))
 
 module = importlib.import_module(sys.argv[1])
 transform = module.Transform()
+#deployables = glob.glob(os.path.join(sys.argv[2], "*.yml"))
+deployables = sys.argv[4].split('|')
 
-files = []
-for filepath in glob.glob(os.path.join(sys.argv[2], sys.argv[3])):
+print(deployables)
+
+previousDeployable = None
+for deployable in deployables:
+    filepath = '{0}/{1}.yml'.format(sys.argv[2], deployable)
     with open(filepath) as file:
-        transform.addConf(file)
-    descriptors = transform.to_descriptor()
-    for key in descriptors:
-        fw = open("../../{0}/{1}".format(sys.argv[4], key), "w")
-        fw.write(descriptors[key])
-        fw.close()
+        properties = {}
+        properties['org'] = os.getenv('HZN_ORG_ID')
+        properties['serviceName'] = os.getenv('ServiceName')
+        properties['serviceVersion'] = os.getenv('ServiceVersion')
+        properties['arch'] = os.getenv('Arch')
+        properties['dependencies'] = []
+        if previousDeployable is not None:
+            dependencies.append('{}/{}_{}_{}'.format(
+                properties['org'], 
+                previousDeployable, 
+                properties['serviceVersion'], 
+                properties['arch']))
+        descriptors = transform.toDescriptor(file, properties)
+        deployableWorkFolder = os.path.join(sys.argv[3], deployable)
+        if os.path.isdir(deployableWorkFolder):
+            shutil.rmtree(deployableWorkFolder)
+        os.makedirs(deployableWorkFolder)
+        for key in descriptors:
+            fw = open("{0}/{1}/{2}".format(sys.argv[3], deployable, key), "w")
+            fw.write(descriptors[key])
+            fw.close()
+        previousDeployable = deployable
+
+#for filepath in deployables:
+#    with open(filepath) as file:
+#        transform.addConf(file)
+#    descriptors = transform.to_descriptor()
+#    for key in descriptors:
+#        fw = open("../../{0}/{1}".format(sys.argv[4], key), "w")
+#        fw.write(descriptors[key])
+#        fw.close()
 
 #with open('../../pipeline/{0}.json'.format(sys.argv[3])) as fr:
 #    transform = module.Transform({ 'data':fr })
@@ -35,42 +66,3 @@ for filepath in glob.glob(os.path.join(sys.argv[2], sys.argv[3])):
 #        fw.close()
 
 #print(data)
-
-
-#{
-#    "DeploymentGpID":"Air-account_00001",
-#    "Services":[
-#        {
-#            "Descriptor":"docker-compose.yml",
-#            "Name":"http_mqtt_fs",
-#            "Properties":[
-#                {
-#                    "Group":"main",
-#                    "Value":[
-#                        {"Name":"version","Type":"","Value":"3.6"},
-#                        {"Name":"services.http_mqtt_fs.container_name","Type":"","Value":"Air-account_00001_http_mqtt_fs"},
-#                        {"Name":"services.http_mqtt_fs.build","Type":"","Value":"001"},
-#                        {"Name":"networks.default.name","Type":"","Value":"http_rest_mqtt"},
-#                        {"Name":"services.http_mqtt_fs.environment[0]","Type":null,"Value":"FLOGO_APP_PROPS_ENV=auto"},
-#                        {"Name":"services.http_mqtt_fs.environment[1]","Type":null,"Value":"DataSource_Logging_LogLevel=INFO"},
-#                        {"Name":"services.http_mqtt_fs.environment[2]","Type":null,"Value":"Mqtt_Pipe_0_IoTMQTT_Broker_URL=tcp://74.101.118.162:1883"},
-#                        {"Name":"services.http_mqtt_fs.environment[3]","Type":null,"Value":"Mqtt_Pipe_0_IoTMQTT_Username=mqtt_admin"},
-#                        {"Name":"services.http_mqtt_fs.environment[4]","Type":null,"Value":"Mqtt_Pipe_0_IoTMQTT_Password=SECRET:79V5PfQgmw5mTglH3kNiNcoeLPJGsx1w7Tw="},
-#                        {"Name":"services.http_mqtt_fs.environment[5]","Type":null,"Value":"Pipe_0_Logging_LogLevel=Info"},
-#                        {"Name":"services.http_mqtt_fs.environment[6]","Type":null,"Value":"Pipe_0_MQTTPub_PublishData={\"id\": \"@f1..id@\", \"source\": \"@f1..source@\", \"device\": \"@f1..device@\", \"gateway\": \"@f1..gateway@\", \"readings\": [{\"id\": \"@f1..id@\", \"origin\": \"@f1..origin@\", \"device\": \"@f1..device@\", \"name\": \"@f1..name@\", \"value\": \"@f1..value@\", \"valueType\": \"@f1..valueType@\", \"mediaType\": \"@f1..mediaType@\"}]}"},
-#                        {"Name":"services.http_mqtt_fs.environment[7]","Type":null,"Value":"Pipe_0_MQTTPub_Topic=AIRModelScoredData02"},
-#                        {"Name":"services.http_mqtt_fs.environment[8]","Type":null,"Value":"Logging_LogLevel=DEBUG"},
-#                        {"Name":"services.http_mqtt_fs.ports[0]","Type":"String","Value":"8080:9999"}
-#                    ]
-#                }
-#            ],
-#            "ScriptSystemEnv":{
-#                "Platformx":"linux/386",
-#                "RSVPUrl":"http://air:10099/f1/air/rsvp/Air-account_00001/http_mqtt_fs",
-#                "TargetServer":"mtorresagent"
-#            },
-#            "Type":"docker",
-#            "Variables":null
-#        }
-#    ]
-#}

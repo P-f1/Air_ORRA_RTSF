@@ -3,34 +3,38 @@
 Namespace=$1
 DeployType=$2
 ProjectID=$4
+InstanceID=$5
 export ServiceName=$3
 export ServiceVersion=0.1.0
 
 export Arch="$(cut -d'/' -f2 <<<"$Platform")"
 
-export HZN_EXCHANGE_URL=$TargetServer
-export HZN_ORG_ID="$(cut -d'@' -f2 <<<"$Username")"
-export HZN_EXCHANGE_USER_AUTH="$(cut -d'@' -f1 <<<"$Username")"
+echo "Namespace    = $Namespace"
+echo "DeployType   = $DeployType"
+echo "ServiceName  = $ServiceName"
+echo "ProjectID    = $ProjectID"
+echo "InstanceID   = $InstanceID"
+echo "Username     = $Username"
+echo "TargetServer = $TargetServer"
+echo "Port         = $Port"
+echo "Descriptor   = $Descriptor"
+echo "DetachedMode = $DetachedMode"
 
-echo "HZN_EXCHANGE_URL="$HZN_EXCHANGE_URL
-echo "HZN_ORG_ID="$HZN_ORG_ID
-echo "HZN_EXCHANGE_USER_AUTH="$HZN_EXCHANGE_USER_AUTH
 
-cd ../artifacts/plugins/python
+echo "Working folder $(pwd)"
 
-chmod +x build-descriptor.py
-python3 ./build-descriptor.py "open-horizon.transform" "../../docker-compose" "*.yml" "open-horizon"
+if [ "docker" == $DeployType ]
+then
+	echo "source ./docker-compose.sh"
+	source ./docker-compose.sh
+elif [ "docker-oh" == $DeployType ]
+then 
+	echo "source ./open-horizon.sh"
+	source ./open-horizon.sh 
+elif [ "k8s" == $DeployType ]
+then
+	echo "source ./k8s.sh"
+	source ./k8s.sh
+fi
 
-cd ../../open-horizon/
-
-echo "Deploy Through OpenHorizon Exchange !!"
-
-# Publish the service and pattern
-hzn exchange service publish -P -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f service.json
-#hzn exchange pattern publish -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f pattern.json
-
-# Publish the deployment policy
-hzn exchange deployment addpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f deployment.policy.json "policy-"$ServiceName"_"$ServiceVersion
-
-hzn exchange service list -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
-hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
+deploy

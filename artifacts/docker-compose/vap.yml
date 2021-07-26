@@ -6,10 +6,12 @@ networks:
 
 services:
   cv-region-of-interest:
-    image: bigoyang/cv-region-of-interest:dev
+    image: bigoyang/cv-region-of-interest:latest
     container_name: cv-region-of-interest
     hostname: cv-region-of-interest
     environment:
+      - MQTT_BROKER_HOST=localhost
+      - MQTT_BROKER_PORT=1883
       - MQTT_DESTINATION_HOST=localhost:1883
 #      - CAMERA0_ENDPOINT=http://video-analytic:8080/pipelines/object_detection_cpu_render/1
       - CAMERA0_ENDPOINT=http://localhost:8080/pipelines/object_detection_cpu/1
@@ -45,4 +47,5 @@ services:
       - ${Artifacts}/pipelines:/home/video-analytics-serving/pipelines
       - ${Artifacts}/models:/home/video-analytics-serving/models
       - ${Artifacts}/video-samples:/home/video-analytics-serving/video-samples
+#      - ${Vas}/vaserving:/home/video-analytics-serving/vaserving
       - ${Demo}:/home/demo
