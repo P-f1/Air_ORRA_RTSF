@@ -54,6 +54,7 @@ function undeploy {
 	
 	ServiceNameArray=$(echo $ServiceName | tr "|" "\n")
 	for ServiceNameElement in $ServiceNameArray
+	
 	do
 		echo "Uneploy $ServiceNameElement Through OpenHorizon Exchange !!"
 		cd $WorkingFolder/$ServiceNameElement
@@ -61,11 +62,11 @@ function undeploy {
 		ls
 		
 		hzn exchange deployment removepolicy  -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH "policy-"$ServiceNameElement"_"$ServiceVersion
-		hzn exchange service remove -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH $ServiceNameElement"_"$ServiceVersion"_"$Arch
 	
 		hzn exchange service list -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 		hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 	done
+	hzn exchange service remove -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH $ServiceName"_"$ServiceVersion"_"$Arch
 }
 
 function get_services {
