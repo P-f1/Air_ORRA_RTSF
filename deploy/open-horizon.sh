@@ -40,12 +40,12 @@ function deploy {
 		hzn exchange service publish -P -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f service.json
 		#hzn exchange pattern publish -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f pattern.json
 
-		# Publish the deployment policy
-		hzn exchange deployment addpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f deployment.policy.json "policy-"$ServiceNameElement"_"$ServiceVersion
-
 		hzn exchange service list -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 		hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 	done
+	
+	# Publish the deployment policy
+	hzn exchange deployment addpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f deployment.policy.json "policy-"$ServiceNameElement"_"$ServiceVersion
 }
 
 function undeploy {
@@ -62,11 +62,11 @@ function undeploy {
 		ls
 		
 		hzn exchange deployment removepolicy  -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH "policy-"$ServiceNameElement"_"$ServiceVersion
-	
+		hzn exchange service remove -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH $ServiceName"_"$ServiceVersion"_"$Arch
+
 		hzn exchange service list -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 		hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 	done
-	hzn exchange service remove -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH $ServiceName"_"$ServiceVersion"_"$Arch
 }
 
 function get_services {
