@@ -41,11 +41,11 @@ function deploy {
 		#hzn exchange pattern publish -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f pattern.json
 
 		hzn exchange service list -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
-		hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 	done
 	
 	# Publish the deployment policy
-	hzn exchange deployment addpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f deployment.policy.json "policy-"$ServiceNameElement"_"$ServiceVersion
+	hzn exchange deployment addpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f deployment.policy.json "policy-"$ServiceName"_"$ServiceVersion
+	hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 }
 
 function undeploy {
@@ -55,18 +55,16 @@ function undeploy {
 	ServiceNameArray=$(echo $ServiceName | tr "|" "\n")
 	for ServiceNameElement in $ServiceNameArray
 	
+	echo "Uneploy policy for $ServiceName Through OpenHorizon Exchange !!"
+	hzn exchange deployment removepolicy  -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH "policy-"$ServiceName"_"$ServiceVersion
+	hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
+
 	do
 		echo "Uneploy $ServiceNameElement Through OpenHorizon Exchange !!"
-		cd $WorkingFolder/$ServiceNameElement
-		pwd
-		ls
-		
-		hzn exchange deployment removepolicy  -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH "policy-"$ServiceNameElement"_"$ServiceVersion
-		hzn exchange service remove -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH $ServiceName"_"$ServiceVersion"_"$Arch
-
+		hzn exchange service remove -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH $ServiceNameElement"_"$ServiceVersion"_"$Arch
 		hzn exchange service list -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
-		hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 	done
+	
 }
 
 function get_services {
