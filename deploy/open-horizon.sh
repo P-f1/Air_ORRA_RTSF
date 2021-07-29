@@ -52,13 +52,12 @@ function undeploy {
 	
 	echo "Uneploy "$ServiceName
 	
-	ServiceNameArray=$(echo $ServiceName | tr "|" "\n")
-	for ServiceNameElement in $ServiceNameArray
-	
 	echo "Uneploy policy for "$ServiceName" Through OpenHorizon Exchange !!"
 	hzn exchange deployment removepolicy  -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH "policy-"$ServiceName"_"$ServiceVersion
 	hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
-
+	
+	ServiceNameArray=$(echo $ServiceName | tr "|" "\n")
+	for ServiceNameElement in $ServiceNameArray
 	do
 		echo "Uneploy "$ServiceNameElement" Through OpenHorizon Exchange !!"
 		hzn exchange service remove -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH $ServiceNameElement"_"$ServiceVersion"_"$Arch
