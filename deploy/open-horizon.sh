@@ -41,7 +41,7 @@ function deploy {
 		#hzn exchange pattern publish -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f pattern.json
 
 		# Publish the deployment policy
-		hzn exchange deployment addpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f deployment.policy.json "policy-"$ServiceName"_"$ServiceVersion
+		hzn exchange deployment addpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH -f deployment.policy.json "policy-"$ServiceNameElement"_"$ServiceVersion
 
 		hzn exchange service list -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 		hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
