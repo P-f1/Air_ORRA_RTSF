@@ -27,12 +27,12 @@ function deploy {
 	chmod +x build-descriptor.py
 	python3 ./build-descriptor.py "open-horizon.transform" $ArtifactsFolder $WorkingFolder $ServiceName
 
-	echo "Uneploy $ServiceName"
+	echo "Deploy "$ServiceName
 
 	ServiceNameArray=$(echo $ServiceName | tr "|" "\n")
 	for ServiceNameElement in $ServiceNameArray
 	do
-		echo "Deploy $ServiceNameElement Through OpenHorizon Exchange !!"
+		echo "Deploy "$ServiceNameElement" Through OpenHorizon Exchange !!"
 		cd $WorkingFolder/$ServiceNameElement
 		pwd
 		ls
@@ -55,12 +55,12 @@ function undeploy {
 	ServiceNameArray=$(echo $ServiceName | tr "|" "\n")
 	for ServiceNameElement in $ServiceNameArray
 	
-	echo "Uneploy policy for $ServiceName Through OpenHorizon Exchange !!"
+	echo "Uneploy policy for "$ServiceName" Through OpenHorizon Exchange !!"
 	hzn exchange deployment removepolicy  -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH "policy-"$ServiceName"_"$ServiceVersion
 	hzn exchange deployment listpolicy -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 
 	do
-		echo "Uneploy $ServiceNameElement Through OpenHorizon Exchange !!"
+		echo "Uneploy "$ServiceNameElement" Through OpenHorizon Exchange !!"
 		hzn exchange service remove -v -f -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH $ServiceNameElement"_"$ServiceVersion"_"$Arch
 		hzn exchange service list -o $HZN_ORG_ID -u $HZN_EXCHANGE_USER_AUTH
 	done
