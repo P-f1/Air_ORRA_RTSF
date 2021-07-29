@@ -50,7 +50,7 @@ function deploy {
 
 function undeploy {
 	
-	echo "Uneploy $ServiceName"
+	echo "Uneploy "$ServiceName
 	
 	ServiceNameArray=$(echo $ServiceName | tr "|" "\n")
 	for ServiceNameElement in $ServiceNameArray
