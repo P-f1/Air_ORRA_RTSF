@@ -32,11 +32,12 @@ for deployable in deployables:
         properties['arch'] = os.getenv('Arch')
         properties['dependencies'] = []
         if previousDeployable is not None:
-            properties['dependencies'].append('{}/{}_{}_{}'.format(
-                properties['org'], 
-                previousDeployable, 
-                properties['serviceVersion'], 
-                properties['arch']))
+            properties['dependencies'].append({
+                "url": previousDeployable,
+                "org": properties['org'],
+                "versionRange": '[0.0.0,INFINITY)',
+                "arch": properties['arch']
+            })
         descriptors = transform.toDescriptor(file, properties)
         deployableWorkFolder = os.path.join(sys.argv[3], deployable)
         if os.path.isdir(deployableWorkFolder):
