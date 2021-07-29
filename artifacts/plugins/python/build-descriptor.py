@@ -27,12 +27,12 @@ for deployable in deployables:
     with open(filepath) as file:
         properties = {}
         properties['org'] = os.getenv('HZN_ORG_ID')
-        properties['serviceName'] = os.getenv('ServiceName')
+        properties['serviceName'] = deployable #os.getenv('ServiceName')
         properties['serviceVersion'] = os.getenv('ServiceVersion')
         properties['arch'] = os.getenv('Arch')
         properties['dependencies'] = []
         if previousDeployable is not None:
-            dependencies.append('{}/{}_{}_{}'.format(
+            properties['dependencies'].append('{}/{}_{}_{}'.format(
                 properties['org'], 
                 previousDeployable, 
                 properties['serviceVersion'], 

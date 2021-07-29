@@ -1,0 +1,4 @@
+deploy/docker-oh/*
+artifacts/plugins/python/common/__pycache__/*.*
+*.pyc
+*.pyc
